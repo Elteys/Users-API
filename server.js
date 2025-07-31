@@ -207,49 +207,49 @@ app.post('/api/upload-avatar', async (req, res) => {
 
 ///////////////////////////////////// LEADERBOARD ///////////////////////////////////////////////////
 
-// Pobierz TOP 10 użytkowników z największą liczbą punktów
-app.get('/api/leaderboard', async (req, res) => {
-  try {
-    const leaderboard = await usersCollection
-      .find({}, { projection: { _id: 0, username: 1, points: 1, avatar: 1 } })
-      .sort({ points: -1 })
-      .limit(50) // Top 50 <-------------- można zmienić
-      .toArray();
+// // Pobierz TOP 10 użytkowników z największą liczbą punktów
+// app.get('/api/leaderboard', async (req, res) => {
+//   try {
+//     const leaderboard = await usersCollection
+//       .find({}, { projection: { _id: 0, username: 1, points: 1, avatar: 1 } })
+//       .sort({ points: -1 })
+//       .limit(50) // Top 50 <-------------- można zmienić
+//       .toArray();
 
-    res.json({ leaderboard });
-  } catch (error) {
-    console.error('[LEADERBOARD BŁĄD]', error.message);
-    res.status(500).json({ error: 'Błąd serwera.' });
-  }
-});
+//     res.json({ leaderboard });
+//   } catch (error) {
+//     console.error('[LEADERBOARD BŁĄD]', error.message);
+//     res.status(500).json({ error: 'Błąd serwera.' });
+//   }
+// });
 
 ///////////////////////////////////// CRASH API ////////////////////////////////////////////////////
 
-const crashRoutes = require('../backend/crash/routes/crashRoutes');
-app.use('/api/crash', crashRoutes);
+// const crashRoutes = require('../backend/crash/routes/crashRoutes');
+// app.use('/api/crash', crashRoutes);
 
 ///////////////////////////////////// AKTUALIZACJA PUNKTÓW ////////////////////////////////////////////////////
 
-app.post('/api/update-points', async (req, res) => {
-  const { email, points } = req.body;
-  if (!email || typeof points !== 'number') {
-    return res.status(400).json({ error: 'Brakuje emaila lub punktów.' });
-  }
-  try {
-    const result = await usersCollection.updateOne(
-      { email },
-      { $set: { points } }
-    );
-    if (result.modifiedCount === 1) {
-      if (req.session.user) req.session.user.points = points;
-      res.json({ message: 'Saldo zaktualizowane.' });
-    } else {
-      res.status(404).json({ error: 'Użytkownik nie znaleziony.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Błąd serwera.' });
-  }
-});
+// app.post('/api/update-points', async (req, res) => {
+//   const { email, points } = req.body;
+//   if (!email || typeof points !== 'number') {
+//     return res.status(400).json({ error: 'Brakuje emaila lub punktów.' });
+//   }
+//   try {
+//     const result = await usersCollection.updateOne(
+//       { email },
+//       { $set: { points } }
+//     );
+//     if (result.modifiedCount === 1) {
+//       if (req.session.user) req.session.user.points = points;
+//       res.json({ message: 'Saldo zaktualizowane.' });
+//     } else {
+//       res.status(404).json({ error: 'Użytkownik nie znaleziony.' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ error: 'Błąd serwera.' });
+//   }
+// });
 
 // =================================================================
 //                           START SERWERA
